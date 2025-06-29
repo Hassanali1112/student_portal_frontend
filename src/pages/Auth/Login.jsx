@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState, useEffect } from "react";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,50 +6,51 @@ import SocialButton from "../../components/SocialButton";
 import axios from "axios";
 import Loader from "../../components/Loader";
 import { useUserContext } from "../../context/index";
-// import { session } from "./index"
+import { session } from "./index"
+
 
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loader, setLoader] = useState(false);
   const { setActiveUserData } = useUserContext();
-//  const {id} = activeUserData
+
+
+
   
   const navigate = useNavigate();
 
-  // useEffect(()=>{
+  // const checkUserAvailiblity = async () => {
+  //     return await session();
+  //   };
+  
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await session();
+        return user
 
-  //   axios.get()
-  // },[])
-
-
-//   const session = async (id, navigate) => {
-//     // setLoader(true)
-//     console.log(id)
-
-//     const data = await axios.get("/api/auth/session", {
-//       params: {
-//         id: id,
-//       }
-//     });
-
-//     if(data.data.session){
-//       // navigate('/dashboard')
-//       setLoader(false)
-//     } else {
-//       navigate("/login");
-//       setLoader(false)
-//     }
-
-//   };
-
-// const checkSession = async () =>{
-//   await session(id, navigate, setLoader)
-// }
-
-//   useEffect(()=>{
-//     checkSession()
-//   },[])
+        // navigate('/dashboard')
+        // console.log(user)
+        // if (user) {
+        //   console.log("dashboard")
+        //   navigate("/dashboard");
+        // } else {
+        //   console.log("No active session");
+        // }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchUser()
+    .then(res =>{
+      
+      console.log(res)
+      // if(res.statusText.toLowerCase() === "ok"){
+      //   navigate("/dashboard");
+      // }
+    })
+  }, []);
 
 
 
@@ -82,7 +83,7 @@ const Login = () => {
   return (
     <>
       
-        <section className="min-h-full flex flex-col md:flex-row rounded-xl border-black/15 border-1 overflow-hidden">
+        <section className="min-h-full flex flex-col md:flex-row rounded border-black/15 overflow-hidden">
           {/* Left image section */}
           <div className="md:w-1/2 w-full">
             <img
@@ -93,7 +94,7 @@ const Login = () => {
           </div>
 
           {/* Right form section */}
-          <div className="md:w-1/2 w-full flex items-center justify-center p-8">
+          <div className="md:w-1/2 w-full flex items-center justify-center p-8 bg-white">
             <div className="max-w-md w-full space-y-6">
               <h1 className="text-3xl font-semibold text-center text-gray-800">
                 Welcome Back

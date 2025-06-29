@@ -2,23 +2,11 @@
 
 import axios from "axios";
 
- export  const session = async (id, navigate, setLoader) => {
+ export  const session = async () => {
   
-   setLoader(true);
-   console.log(id);
+  const getUser = await axios.get("/api/auth/user/get");
 
-   const data = await axios.get("/api/auth/session", {
-     params: {
-       id: id,
-     },
-   });
+  return getUser;
 
-   if (data.data.session) {
-     navigate("/dashboard");
-     setLoader(false);
-   } else {
-     navigate("/login");
-     setLoader(false);
-   }
  };
 
