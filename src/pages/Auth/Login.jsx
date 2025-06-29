@@ -6,53 +6,31 @@ import SocialButton from "../../components/SocialButton";
 import axios from "axios";
 import Loader from "../../components/Loader";
 import { useUserContext } from "../../context/index";
-import { session } from "./index"
-
-
+import { session } from "./index";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loader, setLoader] = useState(false);
   const { setActiveUserData } = useUserContext();
 
-
-
-  
   const navigate = useNavigate();
 
-  // const checkUserAvailiblity = async () => {
-  //     return await session();
-  //   };
   
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const user = await session();
-        return user
+        const response = await session();
 
-        // navigate('/dashboard')
-        // console.log(user)
-        // if (user) {
-        //   console.log("dashboard")
-        //   navigate("/dashboard");
-        // } else {
-        //   console.log("No active session");
-        // }
+        if (response.statusText.toLowerCase() === "ok") {
+          navigate("/dashboard");
+        }
       } catch (err) {
         console.error(err);
       }
     };
-    fetchUser()
-    .then(res =>{
-      
-      console.log(res)
-      // if(res.statusText.toLowerCase() === "ok"){
-      //   navigate("/dashboard");
-      // }
-    })
+    fetchUser();
   }, []);
-
-
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -64,100 +42,95 @@ const Login = () => {
       setLoader(true);
       const data = await axios.post("/api/auth/login", form);
       if (data) {
-        setActiveUserData(data.data.user)
+        setActiveUserData(data.data.user);
         console.log(data.data.user);
-        navigate("/dashboard")
+        navigate("/dashboard");
       }
-
     } catch (error) {
       console.log(error);
     } finally {
       setLoader(false);
       setForm({ name: "", email: "", password: "", confirmPassword: "" });
     }
-    
-    
+
     setForm({ email: "", password: "" });
   };
 
   return (
     <>
-      
-        <section className="min-h-full flex flex-col md:flex-row rounded border-black/15 overflow-hidden">
-          {/* Left image section */}
-          <div className="md:w-1/2 w-full">
-            <img
-              src="https://images.unsplash.com/photo-1529675641475-78780f1fd4b0?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // Replace with your preferred image path
-              alt="Login"
-              className="w-full h-full object-cover"
-            />
-          </div>
+      <section className="min-h-full flex flex-col md:flex-row rounded border-black/15 overflow-hidden">
+        {/* Left image section */}
+        <div className="md:w-1/2 w-full">
+          <img
+            src="https://images.unsplash.com/photo-1529675641475-78780f1fd4b0?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // Replace with your preferred image path
+            alt="Login"
+            className="w-full h-full object-cover"
+          />
+        </div>
 
-          {/* Right form section */}
-          <div className="md:w-1/2 w-full flex items-center justify-center p-8 bg-white">
-            <div className="max-w-md w-full space-y-6">
-              <h1 className="text-3xl font-semibold text-center text-gray-800">
-                Welcome Back
-              </h1>
+        {/* Right form section */}
+        <div className="md:w-1/2 w-full flex items-center justify-center p-8 bg-white">
+          <div className="max-w-md w-full space-y-6">
+            <h1 className="text-3xl font-semibold text-center text-gray-800">
+              Welcome Back
+            </h1>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <Input
-                  label="Email"
-                  type="email"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="john@example.com"
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <Input
+                label="Email"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="john@example.com"
+              />
+              <Input
+                label="Password"
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+              />
+              <Button
+                type="submit"
+                className="w-full flex justify-center items-center gap-3"
+              >
+                {loader ? <Loader /> : ""}
+                Login
+              </Button>
+              <p className="text-sm text-center text-gray-600">
+                Don't have an account?{" "}
+                <Link to="/signup" className="text-blue-600 hover:underline">
+                  Sign Up
+                </Link>
+              </p>
+            </form>
+
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <hr className="flex-grow border-gray-300" />
+                <span className="text-sm text-gray-500">or continue with</span>
+                <hr className="flex-grow border-gray-300" />
+              </div>
+              <div className="flex space-x-2 ">
+                <SocialButton
+                  provider="google"
+                  onClick={() => alert("Google Login")}
                 />
-                <Input
-                  label="Password"
-                  type="password"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
+                <SocialButton
+                  provider="github"
+                  onClick={() => alert("GitHub Login")}
                 />
-                <Button
-                  type="submit"
-                  className="w-full flex justify-center items-center gap-3"
-                >
-                  {loader ? <Loader /> : ""}
-                  Login
-                </Button>
-                <p className="text-sm text-center text-gray-600">
-                  Don't have an account?{" "}
-                  <Link to="/signup" className="text-blue-600 hover:underline">
-                    Sign Up
-                  </Link>
-                </p>
-              </form>
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <hr className="flex-grow border-gray-300" />
-                  <span className="text-sm text-gray-500">
-                    or continue with
-                  </span>
-                  <hr className="flex-grow border-gray-300" />
-                </div>
-                <div className="flex space-x-2 ">
-                  <SocialButton
-                    provider="google"
-                    onClick={() => alert("Google Login")}
-                  />
-                  <SocialButton
-                    provider="github"
-                    onClick={() => alert("GitHub Login")}
-                  />
-                  <SocialButton
-                    provider="linkedin"
-                    onClick={() => alert("LinkedIn Login")}
-                  />
-                </div>
+                <SocialButton
+                  provider="linkedin"
+                  onClick={() => alert("LinkedIn Login")}
+                />
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
     </>
   );
 };

@@ -10,7 +10,6 @@ import { session } from "./index";
 
 
 const SignUp =  () => {
-  const [data, setData] = useState(null);
 
   const [form, setForm] = useState({
     name: "",
@@ -21,31 +20,20 @@ const SignUp =  () => {
   const [loader, setLoader] = useState(false)
   const navigate = useNavigate()
 
-  const checkUserAvailiblity = async () => {
-      return await session()
-    };
-  
-    useEffect(() => {
-      const fetchUser = async () => {
-        try {
-          const response = await checkUserAvailiblity();
-  
-          setData(response);
-          
-        } catch (error) {
-          console.log(error);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await session();
+
+        if (response.statusText.toLowerCase() === "ok") {
+          navigate("/dashboard");
         }
-      };
-      fetchUser();
-  
-      if (!data) {
-        
-        console.log("/signup");
-      } else {
-        
-        navigate("/dashboard");
+      } catch (err) {
+        console.error(err);
       }
-    }, []);
+    };
+    fetchUser();
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });

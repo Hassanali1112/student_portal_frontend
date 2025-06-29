@@ -1,35 +1,25 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { session } from "../Auth";
 import { useNavigate } from "react-router-dom";
 
 const ApplicationStatus = () => {
-
-  const [data, setData] = useState(null);
-
-
   const navigate = useNavigate();
-
-  const checkUserAvailiblity = async () => {
-    return await session();
-  };
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await checkUserAvailiblity();
+        const response = await session();
 
-        setData(response);
-      } catch (error) {
-        console.log(error);
+        console.log(response)
+
+        if (response.statusText.toLowerCase() !== "ok") {
+          navigate("/login");
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
     fetchUser();
-
-    if (!data) {
-      navigate("/login");
-    } else {
-      navigate("/dashboard/application-status");
-    }
   }, []);
 
   return (

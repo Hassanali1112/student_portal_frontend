@@ -24,25 +24,21 @@ const ApplyCourse = () => {
 
   const navigate = useNavigate();
 
-  const checkUserAvailiblity = async () => {
-    return await session();
-  };
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
     
 
-        const response = await checkUserAvailiblity();
+        const response = await session();
         
 
 
 
-        if(!response.data.success){
-          navigate("/login")
-          return null
+        if (response.statusText.toLowerCase() !== "ok") {
+          navigate("/login");
+          return null;
         }
-        console.log(response.data.data[0]._id);
+        
         setUserId(response.data.data[0]._id)
         return response;
       } catch (error) {
@@ -50,7 +46,6 @@ const ApplyCourse = () => {
         console.log(error);
       }
     };
-    console.log("checking")
     fetchUser()
     
   }, []);

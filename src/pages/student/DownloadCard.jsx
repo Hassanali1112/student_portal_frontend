@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, } from "react";
 import html2canvas from "html2canvas";
 import axios from "axios";
+
+import { useEffect } from "react";
 import { session } from "../Auth";
 import { useNavigate } from "react-router-dom";
 
@@ -8,36 +10,25 @@ const DownloadIDCard = () => {
   const [cnic, setCnic] = useState("");
   const [student, setStudent] = useState(null);
   const [error, setError] = useState("");
-  const [data, setData] = useState(null);
 
-  // const navigate = useNavigate()
+   const navigate = useNavigate();
 
-  //   const checkUserAvailiblity = async () => {
-  //       return await session()
-  //     };
+   useEffect(() => {
+     const fetchUser = async () => {
+       try {
+         const response = await session();
 
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const response = await checkUserAvailiblity();
+         console.log(response);
 
-  //       setData(response);
-  //       console.log(response)
-
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchUser();
-
-  //   if (!data) {
-
-  //     navigate("/login");
-  //   } else {
-
-  //     navigate("/dashboard/download-card");
-  //   }
-  // }, []);
+         if (response.statusText.toLowerCase() !== "ok") {
+           navigate("/login");
+         }
+       } catch (err) {
+         console.error(err);
+       }
+     };
+     fetchUser();
+   }, []);
 
   const handleSearch = async () => {
     setError("");

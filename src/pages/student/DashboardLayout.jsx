@@ -1,43 +1,16 @@
 import { useState } from "react";
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
-// import { useEffect } from "react";
-// import { session } from "../Auth";
+
 
 const DashboardLayout = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // const [data, setData] = useState(null);
+
 
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
-  // const navigate = useNavigate();
-
-  // const checkUserAvailiblity = async () => {
-  //   return await session();
-  // };
-
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const response = await checkUserAvailiblity();
-
-  //       setData(response);
-        
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchUser();
-
-  //   if (!data) {
-      
-  //     navigate("/login");
-  //   } else {
-      
-  //     navigate("/dashboard");
-  //   }
-  // }, []);
+  
 
   return (
     <div className="min-h-screen flex bg-blue-200 relative ">
